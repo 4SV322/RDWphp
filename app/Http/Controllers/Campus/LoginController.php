@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Campus;
 use App\Http\Controllers\Controller;
 use App\Models\Candidate;
 use App\Models\Supervisor;
-use App\Models\Director;
 use App\Models\Applicant;
 use App\Models\Admin;
 use Exception;
@@ -110,9 +109,8 @@ class LoginController extends Controller
         $cookieOptions = ['httponly' => false, 'expires' => $expiresTime];
 
         Cookie::forget('is_student'); // Студент
-        Cookie::forget('is_teacher'); // Преподаватель
+        Cookie::forget('is_supervisor'); // Руководитель
         Cookie::forget('is_applicant'); // Соискатель
-        Cookie::forget('is_director'); // Руководитель
         Cookie::forget('is_admin'); // Администратор
 
 
@@ -124,18 +122,15 @@ class LoginController extends Controller
             setcookie('is_applicant', $return['is_applicant'], $cookieOptions);
             $api_token = $this->authApplicant($return);
         }
-        if ($return['is_director']) {
-            setcookie('is_director', $return['is_director'], $cookieOptions);
-            $api_token = $this->authDirector($return);
         }
         if ($return['is_admin']) {
             setcookie('is_admin', $return['is_admin'], $cookieOptions);
             $api_token = $this->authAdmin($return);
         }
         try {
-            if ($return['is_teacher']) {
-                $api_token = $this->authTeacher($return);
-                setcookie('is_teacher', $return['is_teacher'], $cookieOptions);
+            if ($return['is_supervisor']) {
+                $api_token = $this->authSupervisor($return);
+                setcookie('is_supervisor', $return['is_supervisor'], $cookieOptions);
             }
         } catch (Exception $e) {
         }
@@ -144,17 +139,17 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    private function authTeacher($teacherData)
+    private function authSupervisor($supervisorData)
     {
-        if (!isset($teacherData['mira_id']) || $teacherData['mira_id'] == false) {
+        if (!isset($supervisorData['mira_id']) || $supervisorData['mira_id'] == false) {
             throw new Exception();
         }
-        $mira_id = $teacherData['mira_id'][0];
+        $mira_id = $supervisorData['mira_id'][0];
 
-        $fio = $teacherData['last_name'] . ' ' . $teacherData['name'] . ' ' . $teacherData['second_name'];
-        $email = $teacherData['email'];
-        $email = $teacherData['email'];
-        $position = $teacherData['data_teacher']['dep'];
+        $fio = $supervisorData['last_name'] . ' ' . $supervisorData['name'] . ' ' . $supervisorData['second_name'];
+        $email = $supervisorData['email'];
+        $email = $supervisorData['email'];
+        $position = $supervisorData['data_teacher']['dep'];
 
         $api_token = hash('sha256', Str::random(60));
 
@@ -217,14 +212,6 @@ class LoginController extends Controller
         return $api_token;
     }
     
-    private function authDirector($directorData)
-    {
-        //Работа с Руководителем
-        /*
-        написать логику
-        */
-    }
-
     private function authApplicant($applicantData)
     {
         //Работа с Соучастником
@@ -239,5 +226,4 @@ class LoginController extends Controller
         /*
         написать логику
         */
-    }
 }

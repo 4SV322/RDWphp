@@ -44,7 +44,17 @@ class CampusUserData
      * признак принадлежности к группе "преподаватели" { 0 || 1 }
      * @var int
      */
-    public int $is_teacher;
+    public int $is_supervisor;
+    /**
+     * признак принадлежности к группе "Соискатель" { 0 || 1 }
+     * @var int
+     */
+    public int $is_applicant;
+    /**
+     * признак принадлежности к группе "Администратор" { 0 || 1 }
+     * @var int
+     */
+    public int $is_admin;
     /**
      * массив данных по пользователю группы "студент" { массив || пустой массив || FALSE }
      * @var object
@@ -54,14 +64,9 @@ class CampusUserData
      * массив данных по пользователю группы "преподаватель" { массив || пустой массив || FALSE }
      * @var object
      */
-    public CampusTeacherData | null $data_teacher;
+    public CampusSupervisorData | null $data_supervisor;
     /**
      * массив данных по пользователю группы "руководитель проекта" { массив || пустой массив || FALSE }
-     * @var object
-     */
-    public CampusDirectorData | null $data_director;
-    /**
-     * массив данных по пользователю группы "Соискатель" { массив || пустой массив || FALSE }
      * @var object
      */
     public CampusApplicantData | null $data_applicant;
@@ -85,9 +90,8 @@ class CampusUserData
         $this->$photo = $photo;
         $this->$email = $email;
         $this->$is_student = $is_student;
-        $this->$is_teacher = $is_teacher;
+        $this->$is_supervisor = $is_supervisor;
         $this->$is_applicant = $is_applicant;
-        $this->$is_director = $is_director;
         $this->$is_admin = $is_admin;
         $this->$data_student = $data_student;
         $this->$data_teacher = $data_teacher;

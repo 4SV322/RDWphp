@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Campus\model;
 
 
-class CampusTeacherData
+class CampusSupervisorData
 {
     /**
      * идентификационный номер факультета (института)
